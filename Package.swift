@@ -37,7 +37,7 @@ let package = Package(
         .library(name: .serverFoundationVaporTesting, targets: [.serverFoundationVaporTesting])
     ],
     dependencies: [
-        .package(url: "https://github.com/coenttb/swift-server-foundation.git", from: "0.0.1"),
+        .package(url: "https://github.com/coenttb/swift-server-foundation.git", from: "0.1.0"),
         .package(url: "https://github.com/pointfreeco/vapor-routing.git", from: "0.1.3"),
         .package(url: "https://github.com/vapor/fluent.git", from: "4.8.0"),
         .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.7.2"),

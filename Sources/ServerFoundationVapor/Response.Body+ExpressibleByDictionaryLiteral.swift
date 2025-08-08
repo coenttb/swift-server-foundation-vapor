@@ -14,7 +14,4 @@ extension Response.Body: @retroactive ExpressibleByDictionaryLiteral {
         let jsonData = try! JSONSerialization.data(withJSONObject: dictionary, options: [])
         self = .init(data: jsonData)
     }
-
-    public typealias Key = String
-    public typealias Value = String
 }

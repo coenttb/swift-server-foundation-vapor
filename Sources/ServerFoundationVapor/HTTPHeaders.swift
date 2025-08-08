@@ -7,7 +7,7 @@
 
 import Vapor
 
-extension HTTPHeaders.Name {
+extension Vapor.HTTPHeaders.Name {
     public static let xRateLimitLimit: Self = "X-RateLimit-Limit"
     public static let xRateLimitRemaining: Self = "X-RateLimit-Remaining"
     public static let xRateLimitReset: Self = "X-RateLimit-Reset"

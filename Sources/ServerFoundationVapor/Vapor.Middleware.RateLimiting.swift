@@ -9,6 +9,10 @@ import Foundation
 import RateLimiter
 import Vapor
 
+extension Vapor.Middlewares {
+    public typealias Ratelimiting<Key: Hashable & Sendable> = RateLimiter<Key>.Middleware
+}
+
 extension RateLimiter {
     /// Middleware for integrating with Vapor
     public struct Middleware: AsyncMiddleware {

@@ -8,7 +8,11 @@
 import ServerFoundation
 import Vapor
 
-extension SessionsMiddleware {
+extension Vapor.Middlewares {
+    public typealias Sessions = SessionsMiddleware
+}
+
+extension Vapor.Middlewares.Sessions {
     public static func secure(
         driver: any SessionDriver,
         cookieName: String = "vapor-session",
