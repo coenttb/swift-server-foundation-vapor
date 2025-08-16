@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RateLimiter
+import Throttling
 import Vapor
 
 extension Vapor.Middlewares {
