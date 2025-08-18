@@ -8,41 +8,30 @@
 import ServerFoundation
 import Vapor
 
-extension Response {
-    public static func success<T: Codable>(
-        _ success: Bool,
-        data: T? = nil,
-        message: String? = nil,
-        status: HTTPStatus = .ok
-    ) -> Response {
-        return json(success: success, data: data, message: message, status: status)
-    }
+// MARK: - JSON Response Helpers
+
+private struct Empty: Codable {}
+extension JSONEncoder {
+    public static let prettyPrinter: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes, .prettyPrinted]
+        return encoder
+    }()
 }
 
-extension Response {
-    public static func success(
-        _ success: Bool,
-        message: String? = nil,
-        status: HTTPStatus = .ok
-    ) -> Response {
-        return json(success: success, data: EmptyResponse(), message: message, status: status)
-    }
-}
-
-private struct EmptyResponse: Codable {}
 
 extension Response {
-    public static func json<T: Codable>(
+    // MARK: Primary JSON method for Encodable types
+    public static func json<T: Encodable>(
         success: Bool,
         data: T? = nil,
         message: String? = nil,
-        status: HTTPStatus = .ok
+        status: HTTPStatus = .ok,
+        encoder: JSONEncoder = .prettyPrinter
     ) -> Response {
         let response = Envelope(success: success, data: data, message: message)
         do {
-            let encoder = JSONEncoder()
-            encoder.dateEncodingStrategy = .iso8601
-            encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
             let jsonData = try encoder.encode(response)
 
             return Response(
@@ -54,14 +43,68 @@ extension Response {
             return Response(status: .internalServerError, body: .init(string: "Failed to encode response"))
         }
     }
-
+    
+    // MARK: JSON method without data (maintains compatibility)
     public static func json(
         success: Bool,
         message: String? = nil,
+        status: HTTPStatus = .ok,
+        encoder: JSONEncoder = .prettyPrinter
+    ) -> Response {
+        return Self.json(
+            success: success,
+            data: Optional<Empty>.none,
+            message: message,
+            status: status,
+            encoder: encoder
+        )
+    }
+    
+    // MARK: JSON method for dictionary data using AnyCodable
+    public static func json(
+        success: Bool,
+        data: [String: Any]? = nil,
+        message: String? = nil,
+        encoder: JSONEncoder = JSONEncoder()
+    ) throws -> Response {
+        struct JSONResponse: Encodable {
+            let success: Bool
+            let data: AnyCodable?
+            let message: String?
+        }
+        
+        let response = JSONResponse(
+            success: success,
+            data: data.map { AnyCodable.dictionary($0.mapValues(AnyCodable.init)) },
+            message: message
+        )
+        
+        encoder.dateEncodingStrategy = .iso8601
+        let jsonData = try encoder.encode(response)
+        
+        return Response(
+            status: success ? .ok : .badRequest,
+            headers: ["Content-Type": "application/json; charset=utf-8"],
+            body: .init(data: jsonData)
+        )
+    }
+    
+    // MARK: Success convenience methods (maintains compatibility)
+    public static func success<T: Codable>(
+        _ success: Bool,
+        data: T? = nil,
+        message: String? = nil,
         status: HTTPStatus = .ok
     ) -> Response {
-        struct Empty: Codable {}
-        return Self.json(success: success, data: Optional<Empty>.none, message: message, status: status)
+        return json(success: success, data: data, message: message, status: status)
+    }
+    
+    public static func success(
+        _ success: Bool,
+        message: String? = nil,
+        status: HTTPStatus = .ok
+    ) -> Response {
+        return json(success: success, data: Optional<Empty>.none, message: message, status: status)
     }
 }
 
