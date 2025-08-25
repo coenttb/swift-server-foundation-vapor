@@ -47,7 +47,7 @@ extension Response {
     // MARK: JSON method without data (maintains compatibility)
     public static func json(
         success: Bool,
-        message: String? = nil,
+        message: String,
         status: HTTPStatus = .ok,
         encoder: JSONEncoder = .prettyPrinter
     ) -> Response {
