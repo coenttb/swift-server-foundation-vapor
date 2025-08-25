@@ -51,7 +51,7 @@ extension Response {
         status: HTTPStatus = .ok,
         encoder: JSONEncoder = .prettyPrinter
     ) -> Response {
-        return Self.json(
+        return Response.json(
             success: success,
             data: Optional<Empty>.none,
             message: message,
