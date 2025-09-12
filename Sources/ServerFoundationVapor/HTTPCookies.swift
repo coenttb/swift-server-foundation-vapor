@@ -78,3 +78,53 @@ extension HTTPCookies.Value {
         )
     }
 }
+
+
+extension ParserPrinter where Input == URLRequestData {
+    /// Sets a cookie with the given name and value
+    /// - Parameters:
+    ///   - name: Cookie name
+    ///   - value: Cookie value
+    /// - Returns: Modified BaseURLPrinter with the cookie set
+    public func cookie(_ name: String, _ value: HTTPCookies.Value) -> BaseURLPrinter<Self> {
+        var requestData = URLRequestData()
+        requestData.headers["cookie", default: []].append("\(name)=\(value.string)"[...])
+        return self.baseRequestData(requestData)
+    }
+    
+    /// Sets a cookie with the given name and optional value
+    /// - Parameters:
+    ///   - name: Cookie name
+    ///   - value: Optional cookie value, if nil no cookie is set
+    /// - Returns: Modified BaseURLPrinter with the cookie set if value exists
+    public func cookie(_ name: String, _ value: HTTPCookies.Value?) -> BaseURLPrinter<Self> {
+        guard let value = value
+        else { return self.baseRequestData(.init()) }
+        return self.cookie(name, value)
+    }
+    
+    /// Sets multiple cookies at once
+    /// - Parameter cookies: Dictionary mapping cookie names to values
+    /// - Returns: Modified BaseURLPrinter with all cookies set
+    public func cookies(_ cookies: [String: HTTPCookies.Value]) -> BaseURLPrinter<Self> {
+        var requestData = URLRequestData()
+        requestData.headers["cookie", default: []].append(
+            cookies
+                .map { name, value in "\(name)=\(value.string)" }
+                .joined(separator: "; ")[...]
+        )
+        return self.baseRequestData(requestData)
+    }
+}
+
+extension URLRequestData.Fields {
+    /// Convenience accessor for the Authorization header
+    public var authorization: ArraySlice<Substring?>? {
+        get {
+            self["Authorization"]
+        }
+        set {
+            self["Authorization"] = newValue ?? []
+        }
+    }
+}
