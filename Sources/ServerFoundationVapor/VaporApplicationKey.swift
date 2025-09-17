@@ -17,7 +17,5 @@ extension DependencyValues {
 }
 
 public enum VaporApplicationKey: TestDependencyKey {
-    public static let testValue: Vapor.Application = {
-        Application(.testing)
-    }()
+    public static var testValue: Vapor.Application { Application(.testing) }
 }
