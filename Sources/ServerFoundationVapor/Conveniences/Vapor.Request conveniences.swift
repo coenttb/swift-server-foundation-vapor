@@ -7,6 +7,7 @@
 
 import ServerFoundation
 import Vapor
+import Translating
 
 extension Vapor.Request: @retroactive DependencyKey {
     public static let testValue: Vapor.Request? = nil
