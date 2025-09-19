@@ -29,6 +29,15 @@ public struct RequestError: Error {
     }
 }
 
+extension Vapor.Request {
+    public var isFormSubmission: Bool {
+        guard let contentType = headers.contentType else {
+            return false
+        }
+        return contentType == .urlEncodedForm || contentType == .formData
+    }
+}
+
 extension Request {
     /// Attempts to extract geolocation information from request headers
     public var geoLocation: GeoLocation? {
