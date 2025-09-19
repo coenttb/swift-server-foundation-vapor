@@ -38,6 +38,35 @@ extension Vapor.Request {
     }
 }
 
+extension Vapor.Request {
+    /// Checks if the request is an AJAX request expecting JSON response
+    public var isAJAXRequest: Bool {
+        // Check if Accept header contains application/json
+        for preference in headers.accept {
+            if preference.mediaType == .json {
+                return true
+            }
+            // Also check for wildcard acceptance
+            if preference.mediaType == .any {
+                return true
+            }
+        }
+
+        // Check for X-Requested-With header (common AJAX indicator)
+        if headers.first(name: "X-Requested-With")?.lowercased() == "xmlhttprequest" {
+            return true
+        }
+
+        return false
+    }
+
+    /// Checks if this is a traditional form submission (not AJAX)
+    public var isTraditionalFormSubmission: Bool {
+        return isFormSubmission && !isAJAXRequest
+    }
+}
+
+
 extension Request {
     /// Attempts to extract geolocation information from request headers
     public var geoLocation: GeoLocation? {
