@@ -41,19 +41,15 @@ extension Vapor.Request {
 extension Vapor.Request {
     /// Checks if the request is an AJAX request expecting JSON response
     public var isAJAXRequest: Bool {
-        // Check if Accept header contains application/json
-        for preference in headers.accept {
-            if preference.mediaType == .json {
-                return true
-            }
-            // Also check for wildcard acceptance
-            if preference.mediaType == .any {
-                return true
-            }
+        // Check for X-Requested-With header (most reliable AJAX indicator)
+        if headers.first(name: "X-Requested-With")?.lowercased() == "xmlhttprequest" {
+            return true
         }
 
-        // Check for X-Requested-With header (common AJAX indicator)
-        if headers.first(name: "X-Requested-With")?.lowercased() == "xmlhttprequest" {
+        // Check if JSON is the primary (first) Accept type
+        // This avoids false positives from browsers that include */* at the end
+        if let firstAccept = headers.accept.first,
+           firstAccept.mediaType == .json {
             return true
         }
 
