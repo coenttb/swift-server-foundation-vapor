@@ -36,15 +36,25 @@ extension Vapor.Middlewares {
                 isLikelyStaticFile(request: request, response: response)
             
             let level = logLevel(for: response.status, isStaticFile: isStaticFile)
-            
+
+            var metadata: Logger.Metadata = [
+                "elapsed_ms": .stringConvertible(elapsedMs)
+            ]
+
+            // Only include request_id if it's not "-"
+            if requestID != "-" {
+                metadata["request_id"] = .string(requestID)
+            }
+
+            // Only include static_file metadata when it's true
+            if isStaticFile {
+                metadata["static_file"] = .stringConvertible(true)
+            }
+
             request.logger.log(
                 level: level,
-                "\(response.status.code) | \(elapsedMs)ms | \(request.method.rawValue) \(request.url.path)",
-                metadata: [
-                    "request_id": .string(requestID),
-                    "elapsed_ms": .stringConvertible(elapsedMs),
-                    "static_file": .stringConvertible(isStaticFile)
-                ]
+                "\(response.status.code) \(request.method.rawValue) \(request.url.path)",
+                metadata: metadata
             )
             
             return response
@@ -70,12 +80,16 @@ extension Vapor.Middlewares {
         }
         
         private func logLevel(for status: HTTPStatus, isStaticFile: Bool) -> Logger.Level {
+            // Static files should be trace level (essentially hidden in normal operation)
+            if isStaticFile {
+                return .trace
+            }
+
             switch status.code {
             case 500...: return .error
             case 400..<500: return .warning
-            case 304: return .debug  // Not Modified
-            default:
-                return isStaticFile ? .debug : .info
+            case 304: return .trace  // Not Modified responses are also noise
+            default: return .info
             }
         }
     }
