@@ -20,29 +20,30 @@ extension Favicon {
 
         guard let request else { throw Abort(.internalServerError) }
 
-        // Map the route to a file path
+        // First, check for in-memory data (programmatic icons)
+        if let data = favicon.data(for: route) {
+            return Response(
+                status: .ok,
+                headers: [
+                    "Content-Type": favicon.contentType(for: route),
+                    "Cache-Control": "public, max-age=31536000, immutable" // 1 year, immutable
+                ],
+                body: .init(data: data)
+            )
+        }
+
+        // Fallback to file system
         let filePath = mapRouteToFilePath(route)
         let fullPath = request.application.directory.publicDirectory + filePath
 
-        // Check if the file exists
         guard FileManager.default.fileExists(atPath: fullPath) else {
-            // For favicon data stored in memory, return generated data
-            if let data = favicon.data(for: route) {
-                let contentType = favicon.contentType(for: route)
-                return Response(
-                    status: .ok,
-                    headers: [
-                        "Content-Type": contentType,
-                        "Cache-Control": "public, max-age=31536000" // 1 year
-                    ],
-                    body: .init(data: data)
-                )
-            }
             throw Abort(.notFound)
         }
 
-        // Stream the file
-        return try await request.fileio.asyncStreamFile(at: fullPath)
+        // Stream the file with appropriate headers
+        let response = try await request.fileio.asyncStreamFile(at: fullPath)
+        response.headers.add(name: "Cache-Control", value: "public, max-age=31536000, immutable")
+        return response
     }
 
     private static func mapRouteToFilePath(_ route: Favicon.Route) -> String {
