@@ -53,23 +53,31 @@ extension Favicon {
         case .icon(let format):
             switch format {
             case .png(let size):
-                switch size.width {
-                case 16:
+                switch size {
+                case .`16`:
                     return "favicons/favicon-16x16.png"
-                case 32:
+                case .`32`:
                     return "favicons/favicon-32x32.png"
-                case 192:
+                case .`180`:
+                    return "favicons/apple-touch-icon.png"
+                case .`192`:
                     return "favicons/favicon-192x192.png"
-                case 512:
-                    return "favicons/favicon.png"
-                default:
+                case .`512`:
                     return "favicons/favicon.png"
                 }
             case .svg:
                 return "favicons/favicon.svg"
             }
-        case .appleTouchIcon:
-            return "favicons/apple-touch-icon.png"
+        case .appleTouchIcon(let size):
+            switch size {
+            case .none:
+                return "favicons/apple-touch-icon.png"
+            case .some(.`180`):
+                return "favicons/apple-touch-icon-180x180.png"
+            case .some:
+                // Other sizes aren't standard for Apple Touch Icons, fallback to default
+                return "favicons/apple-touch-icon.png"
+            }
         case .appleTouchIconPrecomposed:
             return "favicons/apple-touch-icon.png"
         }
