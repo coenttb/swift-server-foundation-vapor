@@ -9,8 +9,19 @@ import EnvironmentVariables
 import Foundation
 import Vapor
 
-extension EnvironmentVariables: @retroactive DependencyKey {
-    public static var liveValue: EnvironmentVariables {
+//extension EnvironmentVariables: @retroactive DependencyKey {
+//    public static var liveValue: EnvironmentVariables {
+//        @Dependency(\.projectRoot) var projectRoot
+//        let environment = try? Vapor.Environment.detect()
+//        return try! .live(
+//            environmentConfiguration: .projectRoot(projectRoot, environment: environment?.name)
+//        )
+//    }
+//}
+
+
+extension EnvironmentVariables {
+    public static func live()-> EnvironmentVariables {
         @Dependency(\.projectRoot) var projectRoot
         let environment = try? Vapor.Environment.detect()
         return try! .live(
