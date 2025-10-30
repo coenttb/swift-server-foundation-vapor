@@ -53,6 +53,14 @@ let package = Package(
                 .serverFoundationVapor,
                 .vaporTesting
             ]
+        ),
+        .testTarget(
+            name: "ServerFoundationVaporTests",
+            dependencies: [
+                .serverFoundationVapor,
+                .serverFoundationVaporTesting,
+                .vaporTesting
+            ]
         )
 
     ],
