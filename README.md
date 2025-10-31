@@ -115,17 +115,12 @@ func handler(request: Request) async throws -> Response {
 - iOS 17.0+
 - Swift 6.0+
 
-## Dependencies
-
-This package builds upon:
-- [swift-server-foundation](https://github.com/coenttb/swift-server-foundation) - Core server foundation components
-- [Vapor](https://github.com/vapor/vapor) - Swift web framework
-- [vapor-routing](https://github.com/pointfreeco/vapor-routing) - Type-safe routing for Vapor
-- [swift-favicon](https://github.com/coenttb/swift-favicon) - Favicon utilities
-
 ## Related Packages
 
-- [Boiler](https://github.com/coenttb/boiler) - A minimal Swift web framework for building type-safe servers
+- [swift-server-foundation](https://github.com/coenttb/swift-server-foundation) - A Swift package with tools to simplify server development.
+- [Vapor](https://github.com/vapor/vapor) - 💧 A server-side Swift HTTP web framework.
+- [vapor-routing](https://github.com/pointfreeco/vapor-routing) - A bidirectional Vapor router with more type safety and less fuss.
+- [swift-favicon](https://github.com/coenttb/swift-favicon) - A Swift package for type-safe favicons.
 
 ## Contributing
 
