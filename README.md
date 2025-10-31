@@ -134,7 +134,7 @@ func handler(request: Request) async throws -> Response {
 
 ### Third-Party Dependencies
 
-- [pointfreeco/vapor-routing](https://github.com/pointfreeco/vapor-routing): [Description needed for vapor-routing]
+- [pointfreeco/vapor-routing](https://github.com/pointfreeco/vapor-routing): A bidirectional Vapor router with more type safety and less fuss.
 - [vapor/vapor](https://github.com/vapor/vapor): A server-side Swift HTTP web framework.
 
 ## Contributing
