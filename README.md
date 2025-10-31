@@ -117,10 +117,25 @@ func handler(request: Request) async throws -> Response {
 
 ## Related Packages
 
-- [swift-server-foundation](https://github.com/coenttb/swift-server-foundation) - A Swift package with tools to simplify server development.
-- [Vapor](https://github.com/vapor/vapor) - 💧 A server-side Swift HTTP web framework.
-- [vapor-routing](https://github.com/pointfreeco/vapor-routing) - A bidirectional Vapor router with more type safety and less fuss.
-- [swift-favicon](https://github.com/coenttb/swift-favicon) - A Swift package for type-safe favicons.
+### Dependencies
+
+- [swift-favicon](https://github.com/coenttb/swift-favicon): A Swift package for type-safe favicons.
+- [swift-server-foundation](https://github.com/coenttb/swift-server-foundation): A Swift package with tools to simplify server development.
+
+### Used By
+
+- [coenttb-blog](https://github.com/coenttb/coenttb-blog): A Swift package for blog functionality with HTML generation.
+- [coenttb-com-server](https://github.com/coenttb/coenttb-com-server): Production server for coenttb.com built with Boiler.
+- [coenttb-newsletter](https://github.com/coenttb/coenttb-newsletter): A Swift package for newsletter subscription and email management.
+- [coenttb-server](https://github.com/coenttb/coenttb-server): A Swift package for building fast, modern, and safe servers.
+- [coenttb-server-vapor](https://github.com/coenttb/coenttb-server-vapor): A Swift package providing Vapor integration for coenttb-server.
+- [coenttb-syndication](https://github.com/coenttb/coenttb-syndication): A Swift package for RSS and Atom feed generation.
+- [swift-identities](https://github.com/coenttb/swift-identities): The Swift library for identity authentication and management.
+
+### Third-Party Dependencies
+
+- [pointfreeco/vapor-routing](https://github.com/pointfreeco/vapor-routing): [Description needed for vapor-routing]
+- [vapor/vapor](https://github.com/vapor/vapor): A server-side Swift HTTP web framework.
 
 ## Contributing
 
